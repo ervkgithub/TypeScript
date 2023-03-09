@@ -350,7 +350,269 @@ const assign1:Assignment = {
     studentId:"v100",
     title:"Final Project",
     grade:0,
-    verified?:boolean,
+    // verified?:boolean
 }
 
 console.log(updateAssignment(assign1,{grade:95}))
+const AssignGraded:Assignment = updateAssignment(assign1, {grade:95})
+
+// Required and Readonly
+
+const recordAssignment = (assign:Required<Assignment>): Assignment =>{
+  // send to database etc.
+  return assign
+}
+
+const assignVerified: Readonly<Assignment> = {
+  ...AssignGraded, verified:true
+}
+
+recordAssignment({...AssignGraded, verified:true})
+
+// Record
+
+const hexColorMap: Record<string, string> = {
+  red:"ff0000",
+  green:"00ff00",
+  blue:"0000ff"
+}
+
+type studentsss = "Sara" | "Kelly"
+type letterGraded = "A" | "B" | "C" | "D" | "U"
+
+const finalGrades: Record<studentsss, letterGraded> = {
+  Sara:"B",
+  Kelly:"U"
+}
+
+interface Grades {
+  assign1: number,
+  assign2:number
+}
+
+const GradeData : Record<studentsss, Grades> = {
+  Sara: {assign1:95, assign2:90},
+  Kelly:{assign1:80, assign2:15}
+}
+
+// Pick and Omit
+
+type assignResult = Pick<Assignment, "studentId" | "grade">
+
+const score:assignResult = {
+  studentId:"k123",
+  grade:85
+}
+
+type AssignPreview = Omit<Assignment, "grade" | "verified">
+
+const preview: AssignPreview = {
+  studentId:"k123",
+  title:"vijay"
+}
+
+// Exclude and Extract
+
+type adjustedGrade = Exclude<letterGraded, "U">
+type highGrade = Extract<letterGraded, "A" | "B">
+
+// Nonnullable
+
+type allPossibilityGrade = "Dave" | "Sara" | null | undefined
+
+type NamesOnly = NonNullable<allPossibilityGrade>
+
+// ReturnType
+
+type newAssign = {
+  title:string,
+  point:number
+}
+
+const createNewAssign = (title:string, point:number) =>{
+  return {title, point}
+}
+
+type newAssign1 = ReturnType<typeof createNewAssign>
+
+const tsAssign:newAssign1 = createNewAssign("Utility types", 100)
+
+console.log(tsAssign)
+
+// Parameters
+
+type AssignParams = Parameters<typeof createNewAssign>
+const assignArgs: AssignParams = ["Generics", 100]
+const tsAssign2:newAssign1 = createNewAssign(...assignArgs)
+console.log(tsAssign2);
+
+// Awaited - Help us with ReturnType of a Promise
+
+interface User{
+  id:number,
+  name:string,
+  username:string,
+  email:string
+}
+
+const fetchUsers = async (): Promise<User[]> => {
+
+  const data = await fetch(
+      'https://jsonplaceholder.typicode.com/users'
+  ).then(res => {
+      return res.json()
+  }).catch(err => {
+      if (err instanceof Error) console.log(err.message)
+  })
+  return data
+}
+
+type FetchUsersReturnType = Awaited<ReturnType<typeof fetchUsers>>
+
+fetchUsers().then(users => console.log(users))
+
+// Generics > (<T> - Type variable - Placeholde / Generic)
+
+const stringEcho = (arg:string):string => arg
+
+const echo = <T> (arg:T): T => arg
+
+const isObj = <T> (arg:T):boolean => {
+  return (typeof arg === 'object' && !Array.isArray(arg) && arg !== null)
+}
+
+console.log(isObj(null));
+
+const isTrue = <T> (arg:T) : {arg:T, is:boolean} => {
+  if(Array.isArray(arg) && !arg.length){
+    return {arg, is:false}
+  }
+  if(isObj(arg) && !Object.keys(arg as keyof T).length){
+    return {arg, is:false}
+  }
+  return {arg, is:!!arg}
+}
+
+console.log(isTrue(false));
+console.log(isTrue(0));
+console.log(isTrue(true));
+console.log(isTrue(1));
+console.log(isTrue('Vijay'));
+console.log(isTrue(''));
+console.log(isTrue(null));
+console.log(isTrue(undefined));
+console.log(isTrue({}));
+console.log(isTrue({name:'Vijay'}));
+console.log(isTrue([]));
+console.log(isTrue([1,2,3]));
+console.log(isTrue(NaN));
+console.log(isTrue(-0));
+
+interface BoolCheck<T>{
+  value:T,
+  is:boolean 
+}
+
+const checkBooleanValue = <T> (arg:T) : BoolCheck<T> => {
+  if(Array.isArray(arg) && !arg.length){
+    return {value:arg, is:false}
+  }
+  if(isObj(arg) && !Object.keys(arg as keyof T).length){
+    return {value:arg, is:false}
+  }
+  return {value:arg, is:!!arg}
+}
+
+interface HasID{
+  id:number
+}
+
+const processUser = <T extends HasID>(user: T) : T => {
+  return user;
+}
+
+console.log(processUser({id:1, name:"Vijay"}));
+// console.log(processUser({name:"Vijay"}));
+
+const getUsersProperty = <T extends HasID, K extends keyof T>(users:T[], key:K):T[K][] =>{
+  return users.map(user=>user[key]);
+}
+
+const usersArray = [
+  {
+      "id": 1,
+      "name": "Leanne Graham",
+      "username": "Bret",
+      "email": "Sincere@april.biz",
+      "address": {
+          "street": "Kulas Light",
+          "suite": "Apt. 556",
+          "city": "Gwenborough",
+          "zipcode": "92998-3874",
+          "geo": {
+              "lat": "-37.3159",
+              "lng": "81.1496"
+          }
+      },
+      "phone": "1-770-736-8031 x56442",
+      "website": "hildegard.org",
+      "company": {
+          "name": "Romaguera-Crona",
+          "catchPhrase": "Multi-layered client-server neural-net",
+          "bs": "harness real-time e-markets"
+      }
+  },
+  {
+      "id": 2,
+      "name": "Ervin Howell",
+      "username": "Antonette",
+      "email": "Shanna@melissa.tv",
+      "address": {
+          "street": "Victor Plains",
+          "suite": "Suite 879",
+          "city": "Wisokyburgh",
+          "zipcode": "90566-7771",
+          "geo": {
+              "lat": "-43.9509",
+              "lng": "-34.4618"
+          }
+      },
+      "phone": "010-692-6593 x09125",
+      "website": "anastasia.net",
+      "company": {
+          "name": "Deckow-Crist",
+          "catchPhrase": "Proactive didactic contingency",
+          "bs": "synergize scalable supply-chains"
+      }
+  },
+]
+
+console.log(getUsersProperty(usersArray, "email"))
+console.log(getUsersProperty(usersArray, "username"))
+
+class stateObject<T> {
+  private data:T
+  constructor(value:T){
+    this.data = value;
+  }
+  get state():T{
+    return this.data;
+  }
+  set state(value:T){
+    this.data = value;
+  }
+}
+
+const store = new stateObject("John")
+console.log(store.state)
+store.state = "Vijay"
+// store.state = 123
+
+const myState = new stateObject< (string | number | boolean) [] > ([15])
+
+myState.state = (["Vijay", 30, true])
+console.log(myState.state)
+
+// TypeScript with Vite.js
+
+// npm create vite@latest

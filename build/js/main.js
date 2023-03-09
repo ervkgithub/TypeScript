@@ -1,5 +1,14 @@
 "use strict";
 //1
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 let Myname = "Vijay";
 let age = 30;
 let isLoggedIn = false;
@@ -214,6 +223,172 @@ const updateAssignment = (assign, propsToUpdate) => {
 const assign1 = {
     studentId: "v100",
     title: "Final Project",
-    grade: 0
+    grade: 0,
+    // verified?:boolean
 };
 console.log(updateAssignment(assign1, { grade: 95 }));
+const AssignGraded = updateAssignment(assign1, { grade: 95 });
+// Required and Readonly
+const recordAssignment = (assign) => {
+    // send to database etc.
+    return assign;
+};
+const assignVerified = Object.assign(Object.assign({}, AssignGraded), { verified: true });
+recordAssignment(Object.assign(Object.assign({}, AssignGraded), { verified: true }));
+// Record
+const hexColorMap = {
+    red: "ff0000",
+    green: "00ff00",
+    blue: "0000ff"
+};
+const finalGrades = {
+    Sara: "B",
+    Kelly: "U"
+};
+const GradeData = {
+    Sara: { assign1: 95, assign2: 90 },
+    Kelly: { assign1: 80, assign2: 15 }
+};
+const score = {
+    studentId: "k123",
+    grade: 85
+};
+const preview = {
+    studentId: "k123",
+    title: "vijay"
+};
+const createNewAssign = (title, point) => {
+    return { title, point };
+};
+const tsAssign = createNewAssign("Utility types", 100);
+console.log(tsAssign);
+const assignArgs = ["Generics", 100];
+const tsAssign2 = createNewAssign(...assignArgs);
+console.log(tsAssign2);
+const fetchUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield fetch('https://jsonplaceholder.typicode.com/users').then(res => {
+        return res.json();
+    }).catch(err => {
+        if (err instanceof Error)
+            console.log(err.message);
+    });
+    return data;
+});
+fetchUsers().then(users => console.log(users));
+// Generics > (<T> - Type variable - Placeholde / Generic)
+const stringEcho = (arg) => arg;
+const echo = (arg) => arg;
+const isObj = (arg) => {
+    return (typeof arg === 'object' && !Array.isArray(arg) && arg !== null);
+};
+console.log(isObj(null));
+const isTrue = (arg) => {
+    if (Array.isArray(arg) && !arg.length) {
+        return { arg, is: false };
+    }
+    if (isObj(arg) && !Object.keys(arg).length) {
+        return { arg, is: false };
+    }
+    return { arg, is: !!arg };
+};
+console.log(isTrue(false));
+console.log(isTrue(0));
+console.log(isTrue(true));
+console.log(isTrue(1));
+console.log(isTrue('Vijay'));
+console.log(isTrue(''));
+console.log(isTrue(null));
+console.log(isTrue(undefined));
+console.log(isTrue({}));
+console.log(isTrue({ name: 'Vijay' }));
+console.log(isTrue([]));
+console.log(isTrue([1, 2, 3]));
+console.log(isTrue(NaN));
+console.log(isTrue(-0));
+const checkBooleanValue = (arg) => {
+    if (Array.isArray(arg) && !arg.length) {
+        return { value: arg, is: false };
+    }
+    if (isObj(arg) && !Object.keys(arg).length) {
+        return { value: arg, is: false };
+    }
+    return { value: arg, is: !!arg };
+};
+const processUser = (user) => {
+    return user;
+};
+console.log(processUser({ id: 1, name: "Vijay" }));
+// console.log(processUser({name:"Vijay"}));
+const getUsersProperty = (users, key) => {
+    return users.map(user => user[key]);
+};
+const usersArray = [
+    {
+        "id": 1,
+        "name": "Leanne Graham",
+        "username": "Bret",
+        "email": "Sincere@april.biz",
+        "address": {
+            "street": "Kulas Light",
+            "suite": "Apt. 556",
+            "city": "Gwenborough",
+            "zipcode": "92998-3874",
+            "geo": {
+                "lat": "-37.3159",
+                "lng": "81.1496"
+            }
+        },
+        "phone": "1-770-736-8031 x56442",
+        "website": "hildegard.org",
+        "company": {
+            "name": "Romaguera-Crona",
+            "catchPhrase": "Multi-layered client-server neural-net",
+            "bs": "harness real-time e-markets"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Ervin Howell",
+        "username": "Antonette",
+        "email": "Shanna@melissa.tv",
+        "address": {
+            "street": "Victor Plains",
+            "suite": "Suite 879",
+            "city": "Wisokyburgh",
+            "zipcode": "90566-7771",
+            "geo": {
+                "lat": "-43.9509",
+                "lng": "-34.4618"
+            }
+        },
+        "phone": "010-692-6593 x09125",
+        "website": "anastasia.net",
+        "company": {
+            "name": "Deckow-Crist",
+            "catchPhrase": "Proactive didactic contingency",
+            "bs": "synergize scalable supply-chains"
+        }
+    },
+];
+console.log(getUsersProperty(usersArray, "email"));
+console.log(getUsersProperty(usersArray, "username"));
+class stateObject {
+    constructor(value) {
+        this.data = value;
+    }
+    get state() {
+        return this.data;
+    }
+    set state(value) {
+        this.data = value;
+    }
+}
+const store = new stateObject("John");
+console.log(store.state);
+store.state = "Vijay";
+// store.state = 123
+const myState = new stateObject([15]);
+myState.state = (["Vijay", 30, true]);
+console.log(myState.state);
+// TypeScript with Vite.js
+// npm create vite@latest
